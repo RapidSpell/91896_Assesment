@@ -271,6 +271,11 @@ if shape_yn_2d == "yes":
                                ["rectangle", "circle", "triangles", "xxx"])
             print()
 
+            # set dimensions to "NA"
+            dimension_1 = "NA"
+            dimension_2 = "NA"
+            dimension_3 = "NA"
+
             # if user enters 'xxx' break while loop
             if shape == "xxx":
                 break
@@ -292,20 +297,6 @@ if shape_yn_2d == "yes":
                 # calculate area and perimeter
                 area = length * height
                 perimeter = 2 * length + 2 * height
-
-                # print area and perimeter
-                print(f"the area of this rectangle is {area}mm")
-                print(f"the perimeter of this rectangle is {perimeter}mm")
-                print()
-
-                # append dimensions to a list
-                dimension_2d1.append(length)
-                dimension_2d2.append(height)
-                dimension_2d3.append("NA")
-
-                # append area and perimeter to lists
-                areas.append(area)
-                perimeters.append(perimeter)
 
             # if user chose circle
             elif shape == "circle":
@@ -354,15 +345,6 @@ if shape_yn_2d == "yes":
                     # calculate the area and perimeter
                     area = 2 * pi * (circumference / (2 * pi))
                     perimeter = circumference
-
-                # append dimensions to a list
-                dimension_2d1.append(dimension_1)
-                dimension_2d2.append("NA")
-                dimension_2d3.append("NA")
-
-                # append area and perimeter to a list
-                areas.append(area)
-                perimeters.append(perimeter)
 
             # if user chose triangle
             else:
@@ -443,14 +425,23 @@ if shape_yn_2d == "yes":
                     # calculate perimeter
                     perimeter = dimension_1 + dimension_2 * 2
 
-                    # append dimensions to a list
-                    dimension_2d1.append(dimension_1)
-                    dimension_2d2.append(dimension_2)
-                    dimension_2d3.append("NA")
+            # round area and perimeter to 2 dp
+            area = round(area, 2)
+            perimeter = round(perimeter, 2)
 
-                    # append area and perimeter to a list
-                    areas.append(area)
-                    perimeters.append(perimeter)
+            # print area and perimeter
+            print(f"the area of this rectangle is {area}mm")
+            print(f"the perimeter of this rectangle is {perimeter}mm")
+            print()
+
+            # append dimensions to a list
+            dimension_2d1.append(dimension_1)
+            dimension_2d2.append(dimension_2)
+            dimension_2d3.append(dimension_3)
+
+            # append area and perimeter to a list
+            areas.append(area)
+            perimeters.append(perimeter)
 
         # if no 2d shape where entered ask user if they are sure they want no 2d shapes
         finished_2d = yes_no("Are you sure you have no more 2d shapes? ")
@@ -485,7 +476,8 @@ if shape_yn_2d == "yes":
         for var_item in add_millimeters_squared:
             shapes_2d_frame[var_item] = add_mm2(shapes_2d_frame[var_item])
 
-        shapes_2d_string = tabulate(shapes_2d_frame, headers='keys', tablefmt='psql', showindex=False)
+        shapes_2d_string = shapes_2d_frame
+        # shapes_2d_string = tabulate(shapes_2d_frame, headers='keys', tablefmt='psql', showindex=False)
 
 # ask the user if the want to find the information for any 3d shapes
 shape_yn_3d = yes_no("Do you have any 3d shapes you would like to calculate surface area and volume for? ")
@@ -526,19 +518,6 @@ if shape_yn_3d == "yes":
                 # calculate area and perimeter
                 sa = (length * height * 2) + (width * length * 2) + (width * height * 2)
                 volume = length * height * width
-
-                # print sa and volume
-                print(sa)
-                print(volume)
-
-                # append dimensions to a list
-                dimension_3d1.append(length)
-                dimension_3d2.append(height)
-                dimension_3d3.append(width)
-
-                # append area and perimeter to lists
-                surface_areas.append(sa)
-                volumes.append(volume)
 
             # if user picks cylinder
             elif shape == "cylinder":
@@ -598,19 +577,6 @@ if shape_yn_3d == "yes":
                 # calculate sa & volume
                 sa = area * 2 + perimeter * height
                 volume = area * height
-
-                # print sa and volume
-                print(sa)
-                print(volume)
-
-                # append dimensions to a list
-                dimension_3d1.append(dimension_1)
-                dimension_3d2.append(height)
-                dimension_3d3.append("NA")
-
-                # append area and perimeter to lists
-                surface_areas.append(sa)
-                volumes.append(volume)
 
             # if user picks cone
             elif shape == "cone":
@@ -677,19 +643,6 @@ if shape_yn_3d == "yes":
                 sa = pi * (r ** 2) + pi * r * s
                 volume = (1/3) * height * (r ** 2)
 
-                # print sa and volume
-                print(sa)
-                print(volume)
-
-                # append dimensions to a list
-                dimension_3d1.append(dimension_1)
-                dimension_3d2.append(height)
-                dimension_3d3.append("NA")
-
-                # append area and perimeter to lists
-                surface_areas.append(sa)
-                volumes.append(volume)
-
             # if user picks sphere
             elif shape == "sphere":
                 known_dimensions_list = ["diameter", "radius", "circumference"]
@@ -734,19 +687,6 @@ if shape_yn_3d == "yes":
                 sa = 4 * pi * radius ** 2
                 volume = (4 / 3) * pi * radius ** 3
 
-                # print sa and volume
-                print(sa)
-                print(volume)
-
-                # append dimensions to a list
-                dimension_3d1.append(dimension_1)
-                dimension_3d2.append("NA")
-                dimension_3d3.append("NA")
-
-                # append area and perimeter to lists
-                surface_areas.append(sa)
-                volumes.append(volume)
-
             # if user picks pyramid
             else:
                 # finds what shape the base of the pyramid is
@@ -754,7 +694,7 @@ if shape_yn_3d == "yes":
                                   ["square", "triangle"])
                 print()
 
-                #if user picks square
+                # if user picks square
                 if base == "square":
                     height = find_dimension("What is the height of the pyramid? ")
                     width = find_dimension("What is the width of the base? ")
@@ -775,18 +715,22 @@ if shape_yn_3d == "yes":
                     sa = base_sa + s_area * 4
                     volume = (width ** 2) * (height / 3)
 
-                    # print sa and volume
-                    print(sa)
-                    print(volume)
+                # if user picks triangle
+                else:
+                    
 
-                    # append dimensions to a list
-                    dimension_3d1.append(height)
-                    dimension_3d2.append(width)
-                    dimension_3d3.append("NA")
+            # print sa and volume
+            print(sa)
+            print(volume)
 
-                    # append area and perimeter to lists
-                    surface_areas.append(sa)
-                    volumes.append(volume)
+            # append dimensions to a list
+            dimension_3d1.append(height)
+            dimension_3d2.append(width)
+            dimension_3d3.append("NA")
+
+            # append area and perimeter to lists
+            surface_areas.append(sa)
+            volumes.append(volume)
 
         # if no 3d shape where entered ask user if they are sure they want no 3d shapes
         finished_yn = yes_no("Are you sure you have no more 3d shapes")
@@ -868,6 +812,9 @@ if len(shapes_3d) < 1:
 # set 3d result to the tabulated string
 else:
     result_3d = shapes_3d_string
+
+# print the 3d result
+print(result_3d, "\n\n")
 
 # create file
 file_name = "Math_Calc_Final_Output"
