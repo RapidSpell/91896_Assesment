@@ -251,6 +251,8 @@ instructions_yn = yes_no("Would you like to read the instructions? ")
 if instructions_yn == "yes":
     print("""
     *instructions go here*
+    
+    and something about only equilateral triangles for the base of the triangular based pyramid
     """)
 
 else:
@@ -386,7 +388,6 @@ if shape_yn_2d == "yes":
                     # calculate perimeter
                     perimeter = dimension_1 * 3
 
-
                 # if user picks scalene
                 elif tri_type == "scalene":
                     # gets sides length
@@ -502,22 +503,29 @@ if shape_yn_3d == "yes":
             # append chosen shape to a list
             shapes_3d.append(shape)
 
+            # set dimensions to "NA" as a default
+            dimension_1 = "NA"
+            dimension_2 = "NA"
+            dimension_3 = "NA"
+
+
+
             # if user choose cuboid
             if shape == "cuboid":
                 # ask for dimensions and values
-                length = find_dimension("What is the length of the cuboid? ")
-                height = find_dimension("What is the height of the cuboid? ")
-                width = find_dimension("What is the width of the cuboid? ")
+                dimension_1 = find_dimension("What is the length of the cuboid? ")
+                dimension_2 = find_dimension("What is the height of the cuboid? ")
+                dimension_3 = find_dimension("What is the width of the cuboid? ")
                 print()
 
                 # Convert length values to mm
-                length = convert_mm(length[0], length[1])
-                height = convert_mm(height[0], height[1])
-                width = convert_mm(width[0], width[1])
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
+                dimension_3 = convert_mm(dimension_3[0], dimension_3[1])
 
                 # calculate area and perimeter
-                sa = (length * height * 2) + (width * length * 2) + (width * height * 2)
-                volume = length * height * width
+                sa = (dimension_1 * dimension_2 * 2) + (dimension_3 * dimension_2 * 2) + (dimension_3 * dimension_2 * 2)
+                volume = dimension_1 * dimension_2 * dimension_3
 
             # if user picks cylinder
             elif shape == "cylinder":
@@ -528,44 +536,41 @@ if shape_yn_3d == "yes":
                 # if known dimension is diameter
                 if known_len == "diameter":
                     # ask for dimensions and values
-                    diameter = find_dimension("what is the diameter of the base? ")
+                    dimension_1 = find_dimension("what is the diameter of the base? ")
                     print()
 
                     # covert to millimeters
-                    diameter = convert_mm(diameter[0], diameter[1])
-                    dimension_1 = diameter
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = pi * (diameter / 2) ** 2
-                    perimeter = 2 * pi * (diameter / 2)
+                    area = pi * (dimension_1 / 2) ** 2
+                    perimeter = 2 * pi * (dimension_1 / 2)
 
                 # if known dimension is radius
                 elif known_len == "radius":
                     # ask for dimensions and values
-                    radius = find_dimension("what is the radius of the base? ")
+                    dimension_1 = find_dimension("what is the radius of the base? ")
                     print()
 
                     # covert to millimeters
-                    radius = convert_mm(radius[0], radius[1])
-                    dimension_1 = radius
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = pi * radius ** 2
-                    perimeter = 2 * pi * radius
+                    area = pi * dimension_1 ** 2
+                    perimeter = 2 * pi * dimension_1
 
                 # if known dimension is circumference
                 else:
                     # ask for dimensions and values
-                    circumference = find_dimension("what is the circumference or the base? ")
+                    dimension_1 = find_dimension("what is the circumference or the base? ")
                     print()
 
                     # covert to millimeters
-                    circumference = convert_mm(circumference[0], circumference[1])
-                    dimension_1 = circumference
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = 2 * pi * (circumference / (2 * pi))
-                    perimeter = circumference
+                    area = 2 * pi * (dimension_1 / (2 * pi))
+                    perimeter = dimension_1
 
                 # asks user for height
                 height = find_dimension("what is the height of the cylinder? ")
@@ -587,44 +592,41 @@ if shape_yn_3d == "yes":
                 # if known dimension is diameter
                 if known_len == "diameter":
                     # ask for dimensions and values
-                    diameter = find_dimension("what is the diameter of the base? ")
+                    dimension_1 = find_dimension("what is the diameter of the base? ")
                     print()
 
                     # covert to millimeters
-                    diameter = convert_mm(diameter[0], diameter[1])
-                    dimension_1 = diameter
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = pi * (diameter / 2) ** 2
-                    perimeter = 2 * pi * (diameter / 2)
+                    area = pi * (dimension_1 / 2) ** 2
+                    perimeter = 2 * pi * (dimension_1 / 2)
 
                 # if known dimension is radius
                 elif known_len == "radius":
                     # ask for dimensions and values
-                    radius = find_dimension("what is the radius of the base? ")
+                    dimension_1 = find_dimension("what is the radius of the base? ")
                     print()
 
                     # covert to millimeters
-                    radius = convert_mm(radius[0], radius[1])
-                    dimension_1 = radius
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = pi * radius ** 2
-                    perimeter = 2 * pi * radius
+                    area = pi * dimension_1 ** 2
+                    perimeter = 2 * pi * dimension_1
 
                 # if known dimension is circumference
                 else:
                     # ask for dimensions and values
-                    circumference = find_dimension("what is the circumference or the base? ")
+                    dimension_1 = find_dimension("what is the circumference or the base? ")
                     print()
 
                     # covert to millimeters
-                    circumference = convert_mm(circumference[0], circumference[1])
-                    dimension_1 = circumference
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = 2 * pi * (circumference / (2 * pi))
-                    perimeter = circumference
+                    area = 2 * pi * (dimension_1 / (2 * pi))
+                    perimeter = dimension_1
 
                 # asks user for height
                 height = find_dimension("what is the height of the cone? ")
@@ -652,14 +654,13 @@ if shape_yn_3d == "yes":
                 # if known dimension is diameter
                 if known_len == "diameter":
                     # ask for dimensions and values
-                    diameter = find_dimension("what is the diameter of the base? ")
+                    dimension_1 = find_dimension("what is the diameter of the base? ")
                     print()
 
                     # covert to millimeters
-                    diameter = convert_mm(diameter[0], diameter[1])
-                    dimension_1 = diameter
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
-                    radius = 0.5 * diameter
+                    radius = 0.5 * dimension_1
 
                 # if known dimension is radius
                 elif known_len == "radius":
@@ -674,14 +675,12 @@ if shape_yn_3d == "yes":
                 # if known dimension is circumference
                 else:
                     # ask for dimensions and values
-                    circumference = find_dimension("what is the circumference or the base? ")
+                    dimension_1 = find_dimension("what is the circumference or the base? ")
                     print()
 
                     # covert to millimeters
-                    circumference = convert_mm(circumference[0], circumference[1])
-                    dimension_1 = circumference
-
-                    radius = circumference / (2 * pi)
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                    radius = dimension_1 / (2 * pi)
 
                 # calculate sa & volume
                 sa = 4 * pi * radius ** 2
@@ -696,37 +695,52 @@ if shape_yn_3d == "yes":
 
                 # if user picks square
                 if base == "square":
-                    height = find_dimension("What is the height of the pyramid? ")
-                    width = find_dimension("What is the width of the base? ")
+                    dimension_1 = find_dimension("What is the height of the pyramid? ")
+                    dimension_2 = find_dimension("What is the width of the base? ")
                     print()
 
                     # convert dimensions to mm
-                    height = convert_mm(height[0], height[1])
-                    width = convert_mm(width[0], width[1])
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
 
                     # calculate area of the base
-                    base_sa = width * width
+                    base_sa = dimension_2 * dimension_2
+
+                    # find the slant height for the pyramid
+                    s_height = ((0.5 * dimension_2) ** 2 + dimension_1 ** 2) ** 0.5
 
                     # calculate area of sides
-                    s_height = ((0.5 * width) ** 2 + height ** 2) ** 0.5
-                    s_area = s_height * 0.5 * width
+                    s_area = s_height * 0.5 * dimension_2
 
                     # calculate total sa and volume
                     sa = base_sa + s_area * 4
-                    volume = (width ** 2) * (height / 3)
+                    volume = (dimension_2 ** 2) * (dimension_1 / 3)
 
                 # if user picks triangle
                 else:
-                    
+                    # gets base length and height
+                    dimension_1 = find_dimension("what is the length of the base of the base triangle? ")
+                    dimension_2 = find_dimension("What is the height of the base triangle? ")
+                    print()
+
+                    # convert values to mm
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
+
+                    # calculate area
+                    s = (dimension_1 * 3) / 2
+                    b_area = (s * 3 * (s - dimension_1)) ** 0.5
+
+                    s_area =
 
             # print sa and volume
-            print(sa)
-            print(volume)
+            print(f"the surface area of your 3d shape is {sa}")
+            print(f"the volume of your 3d shape is {volume}")
 
             # append dimensions to a list
-            dimension_3d1.append(height)
-            dimension_3d2.append(width)
-            dimension_3d3.append("NA")
+            dimension_3d1.append(dimension_1)
+            dimension_3d2.append(dimension_2)
+            dimension_3d3.append(dimension_3)
 
             # append area and perimeter to lists
             surface_areas.append(sa)
