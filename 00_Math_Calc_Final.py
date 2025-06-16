@@ -92,7 +92,7 @@ Please choose an option from {valid_ans_list}
 def pick_list(question, valid_ans_list):
     """ this function makes users pick an option from a list """
     # error message to display if the user inputs and invalid response
-    error = "bad dont do that"
+    error = f"Please enter valid units {valid_ans_list}"
 
     # while to keep asking until user enters a valid ans
     while True:
@@ -269,7 +269,7 @@ if shape_yn_2d == "yes":
         # while loop to keep asking for 2d shapes until user enters 'xxx'
         while True:
             # ask what shape they would like to find the area and perimeter for
-            shape = string_check("Which 2d shapes would you like to calculate area and perimeter for? ",
+            shape = string_check("Which 2d shape would you like to calculate area and perimeter for? ",
                                ["rectangle", "circle", "triangles", "xxx"])
             print()
 
@@ -345,7 +345,7 @@ if shape_yn_2d == "yes":
                     dimension_1 = circumference
 
                     # calculate the area and perimeter
-                    area = 2 * pi * (circumference / (2 * pi))
+                    area = pi * (circumference / (2 * pi)) ** 2
                     perimeter = circumference
 
             # if user chose triangle
@@ -382,8 +382,7 @@ if shape_yn_2d == "yes":
                     dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate area
-                    s = (dimension_1 * 3) / 2
-                    area = (s * 3 * (s - dimension_1)) ** 0.5
+                    area = ((3 ** (1/2)) / 4) * (dimension_1 ** 2)
 
                     # calculate perimeter
                     perimeter = dimension_1 * 3
@@ -492,7 +491,7 @@ if shape_yn_3d == "yes":
         # while loop to keep asking for 3d shapes until user enters 'xxx'
         while True:
             # ask what shape they would like to find the surface area and volume for
-            shape = string_check("Which 3d shapes would you like to calculate surface area and volume for? ",
+            shape = string_check("Which 3d shape would you like to calculate surface area and volume for? ",
                                ["cuboid", "cylinder", "cone", "sphere", "pyramid", "xxx"])
             print()
 
