@@ -182,25 +182,21 @@ def convert_mm(value, current_unit):
     else:
         value *= 1000
 
-    return int(value)
+    return float(value)
 
 
-def yes(question, valid_ans):
-    """ this function make users pick an option in a list """
+def round_2dp(value):
+    """ This function checks if a value is a float and if it is it rounds it to 2dp """
+    # try except to check if it is a float
+    try:
+        value = float(value)
 
-    # error message to be displayed if the user enter an invalid ans
-    error = f"please enter a valid ans {valid_ans}"
+        # if value is float round to 2dp
+        value = round(value, 2)
+        return value
 
-    # while true to keep asking until user enter a valid ans
-    while True:
-        # asks user what they chose
-        ans = input(question)
-
-        if ans in valid_ans:
-            return ans
-
-        else:
-            print(error)
+    except ValueError:
+        return value
 
 
 def add_mm(value):
@@ -221,22 +217,27 @@ def add_mm3(value):
 # main routine goes here
 # initialize variables
 # 2d variables
+# variable lists
 shapes_2d = []
 dimension_2d1 = []
 dimension_2d2 = []
 dimension_2d3 = []
 areas = []
 perimeters = []
-shapes_2d_string = ""
 
 # 3d variables
+# variable lists
 shapes_3d = []
 dimension_3d1 = []
 dimension_3d2 = []
 dimension_3d3 = []
 surface_areas = []
 volumes = []
+
+# setting values to "" so they cannot be undefined
 shapes_3d_string = ""
+shapes_2d_string = ""
+shapes_2d_frame = ""
 
 # other variables
 pi = math.pi
@@ -259,7 +260,7 @@ else:
     print()
 
 # ask the user if the want to find the information for any 2d shapes
-shape_yn_2d = yes_no("do you have any 2D shape you would like calculate area and perimeter for? ")
+shape_yn_2d = yes_no("do you have any 2D shapes you would like calculate area and perimeter for? ")
 print()
 # if user picks yes run 2d code
 if shape_yn_2d == "yes":
@@ -425,9 +426,13 @@ if shape_yn_2d == "yes":
                     # calculate perimeter
                     perimeter = dimension_1 + dimension_2 * 2
 
-            # round area and perimeter to 2 dp
-            area = round(area, 2)
-            perimeter = round(perimeter, 2)
+            # round all values to 2 dp
+            dimension_1 = round_2dp(dimension_1)
+            dimension_2 = round_2dp(dimension_2)
+            dimension_3 = round_2dp(dimension_3)
+
+            area = round_2dp(area)
+            perimeter = round_2dp(perimeter)
 
             # print area and perimeter
             print(f"the area of this rectangle is {area}mm")
@@ -476,8 +481,7 @@ if shape_yn_2d == "yes":
         for var_item in add_millimeters_squared:
             shapes_2d_frame[var_item] = add_mm2(shapes_2d_frame[var_item])
 
-        shapes_2d_string = shapes_2d_frame
-        # shapes_2d_string = tabulate(shapes_2d_frame, headers='keys', tablefmt='psql', showindex=False)
+        shapes_2d_string = tabulate(shapes_2d_frame, headers='keys', tablefmt='psql', showindex=False)
 
 # ask the user if the want to find the information for any 3d shapes
 shape_yn_3d = yes_no("Do you have any 3d shapes you would like to calculate surface area and volume for? ")
@@ -815,12 +819,12 @@ header_2d = statement("2d shapes", "-")
 print(header_2d, "\n")
 
 # set 2d results to "no 2d shapes were calculated"
-if len(shapes_2d) < 1:
+if len(shapes_2d) <= 0:
     result_2d = "no 2d shapes were calculated"
 
 # set 2d result to the tabulated string
 else:
-    result_2d = shapes_2d_string
+    result_2d = shapes_2d_frame
 
 # print the 2d result
 print(result_2d, "\n\n")
@@ -832,7 +836,7 @@ header_3d = statement("3d shapes", "-")
 print(header_3d, "\n")
 
 # set 2d results to "no 3d shapes were calculated"
-if len(shapes_3d) < 1:
+if len(shapes_3d) <=0:
     result_3d = "no 3d shapes were calculated"
 
 # set 3d result to the tabulated string
