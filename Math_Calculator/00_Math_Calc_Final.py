@@ -113,11 +113,11 @@ def find_dimension(question):
     # list of valid units
     valid_units = ["millimeters", "centimeters", "meters", "mm", "cm", "m"]
 
-    # error message for if they enter an invalid ans
-    error = "Please enter a valid number"
-
     # while to make sure the user enters a dimension equal to or less than 9 m
     while True:
+        # error message for if they enter an invalid ans
+        error = "Please enter a valid number"
+
         # while to keep asking what the dimension is if they don't enter a valid integer
         while True:
             # finds what the distance is
@@ -199,19 +199,26 @@ def round_2dp(value):
         return value
 
 
-def add_mm(value):
-    """ this function adds 'mm' to the end of a value/string """
-    return f"{value}mm"
+def add_mm_pwr(old_list, power):
+    """ this function adds 'mm^3' to the end of every value/string in a list"""
+    new_list = []
 
+    for value in old_list:
+        if value != "NA":
+            if power == 1:
+                new_list.append(f"{value}mm")
 
-def add_mm2(value):
-    """ this function adds 'mm^2' to the end of a value/string """
-    return f"{value}mm\u00b2"
+            elif power == 2:
+                new_list.append(f"{value}mm\u00b2")
 
+            else:
+                new_list.append(f"{value}mm\u00b3")
 
-def add_mm3(value):
-    """ this function adds 'mm^3' to the end of a value/string """
-    return f"{value}mm\u00b3"
+        else:
+            new_list.append(value)
+
+    # return the new version of the list
+    return new_list
 
 
 # main routine goes here
@@ -289,17 +296,17 @@ if shape_yn_2d == "yes":
             # if user choose square
             if shape == "rectangle":
                 # ask for dimensions and values
-                length = find_dimension("What is the length of the rectangle? ")
-                height = find_dimension("What is the height of the rectangle? ")
+                dimension_1 = find_dimension("What is the length of the rectangle? ")
+                dimension_2 = find_dimension("What is the height of the rectangle? ")
                 print()
 
                 # Convert length values to mm
-                length = convert_mm(length[0], length[1])
-                height = convert_mm(height[0], height[1])
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
 
                 # calculate area and perimeter
-                area = length * height
-                perimeter = 2 * length + 2 * height
+                area = dimension_1 * dimension_2
+                perimeter = 2 * dimension_1 + 2 * dimension_2
 
             # if user chose circle
             elif shape == "circle":
@@ -310,44 +317,41 @@ if shape_yn_2d == "yes":
                 # if known dimension is diameter
                 if known_len == "diameter":
                     # ask for dimensions and values
-                    diameter = find_dimension("what is the diameter or the circle? ")
+                    dimension_1 = find_dimension("what is the diameter or the circle? ")
                     print()
 
                     # covert to millimeters
-                    diameter = convert_mm(diameter[0], diameter[1])
-                    dimension_1 = diameter
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the sa & perimeter
-                    area = pi * (diameter / 2) ** 2
-                    perimeter = 2 * pi * (diameter / 2)
+                    area = pi * (dimension_1 / 2) ** 2
+                    perimeter = 2 * pi * (dimension_1 / 2)
 
                 # if known dimension is radius
                 elif known_len == "radius":
                     # ask for dimensions and values
-                    radius = find_dimension("what is the radius or the circle? ")
+                    dimension_1 = find_dimension("what is the radius or the circle? ")
                     print()
 
                     # covert to millimeters
-                    radius = convert_mm(radius[0], radius[1])
-                    dimension_1 = radius
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the sa & perimeter
-                    area = pi * radius ** 2
-                    perimeter = 2 * pi * radius
+                    area = pi * dimension_1 ** 2
+                    perimeter = 2 * pi * dimension_1
 
                 # if known dimension is circumference
                 else:
                     # ask for dimensions and values
-                    circumference = find_dimension("what is the circumference or the circle? ")
+                    dimension_1 = find_dimension("what is the circumference or the circle? ")
                     print()
 
                     # covert to millimeters
-                    circumference = convert_mm(circumference[0], circumference[1])
-                    dimension_1 = circumference
+                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
                     # calculate the area and perimeter
-                    area = pi * (circumference / (2 * pi)) ** 2
-                    perimeter = circumference
+                    area = pi * (dimension_1 / (2 * pi)) ** 2
+                    perimeter = dimension_1
 
             # if user chose triangle
             else:
@@ -435,8 +439,8 @@ if shape_yn_2d == "yes":
             perimeter = round_2dp(perimeter)
 
             # print area and perimeter
-            print(f"the area of this rectangle is {area}mm")
-            print(f"the perimeter of this rectangle is {perimeter}mm")
+            print(f"the area of your {shape} is {area}mm")
+            print(f"the perimeter of your {shape} is {perimeter}mm")
             print()
 
             # append dimensions to a list
@@ -458,6 +462,14 @@ if shape_yn_2d == "yes":
 
     # if there is 1 or more 2d shapes crate dictionary and frame
     if len(shapes_2d) >= 1:
+
+        # add mm and mm^2
+        dimension_2d1 = add_mm_pwr(dimension_2d1, 1)
+        dimension_2d2 = add_mm_pwr(dimension_2d2, 1)
+        dimension_2d3 = add_mm_pwr(dimension_2d3, 1)
+        perimeters = add_mm_pwr(perimeters, 1)
+        areas = add_mm_pwr(areas, 2)
+
         # creates dictionary
         shapes_2d_dict = {
             'Shape': shapes_2d,
@@ -470,16 +482,6 @@ if shape_yn_2d == "yes":
 
         # create frame
         shapes_2d_frame = pandas.DataFrame(shapes_2d_dict)
-
-        # add mm
-        add_millimeters = ['Dimension 1', 'Dimension 2', 'Dimension 3', 'Perimeter']
-        add_millimeters_squared = ['Area']
-
-        for var_item in add_millimeters:
-            shapes_2d_frame[var_item] = add_mm(shapes_2d_frame[var_item])
-
-        for var_item in add_millimeters_squared:
-            shapes_2d_frame[var_item] = add_mm2(shapes_2d_frame[var_item])
 
         shapes_2d_string = tabulate(shapes_2d_frame, headers='keys', tablefmt='psql', showindex=False)
 
@@ -496,7 +498,7 @@ if shape_yn_3d == "yes":
         while True:
             # ask what shape they would like to find the surface area and volume for
             shape = string_check("Which 3d shape would you like to calculate surface area and volume for? ",
-                               ["cuboid", "cylinder", "cone", "sphere", "pyramid", "xxx"])
+                               ["cuboid", "cylinder", "cone", "sphere", "pyramid", "xxx"], 3)
             print()
 
             # if user enters 'xxx' break while loop
@@ -510,6 +512,8 @@ if shape_yn_3d == "yes":
             dimension_1 = "NA"
             dimension_2 = "NA"
             dimension_3 = "NA"
+            volume = ""
+            sa = ""
 
 
 
@@ -750,8 +754,8 @@ if shape_yn_3d == "yes":
                     volume = 1/3 * b_area * dimension_2
 
             # print sa and volume
-            print(f"the surface area of your 3d shape is {sa}")
-            print(f"the volume of your 3d shape is {volume}")
+            print(f"the surface area of your {shape} is {sa}")
+            print(f"the volume of your {shape} is {volume}")
 
             # append dimensions to a list
             dimension_3d1.append(dimension_1)
@@ -772,6 +776,13 @@ if shape_yn_3d == "yes":
 
     # if there is 1 or more 3d shapes crate dictionary and frame
     if len(shapes_3d) >= 1:
+        #  add mm and mm^2
+        dimension_2d1 = add_mm_pwr(dimension_2d1, 1)
+        dimension_2d2 = add_mm_pwr(dimension_2d2, 1)
+        dimension_2d3 = add_mm_pwr(dimension_2d3, 1)
+        volumes = add_mm_pwr(volumes, 3)
+        surface_areas = add_mm_pwr(surface_areas, 2)
+
         # creates dictionary
         shapes_3d_dict = {
             'Shape': shapes_3d,
@@ -784,20 +795,6 @@ if shape_yn_3d == "yes":
 
         # create frame
         shapes_3d_frame = pandas.DataFrame(shapes_3d_dict)
-
-        # add mm
-        add_millimeters = ['Dimension 1', 'Dimension 2', 'Dimension 3', 'Perimeter']
-        add_millimeters_squared = ['Surface Area']
-        add_millimeters_cubed = ['Volume']
-
-        for var_item in add_millimeters:
-            shapes_3d_frame[var_item] = add_mm(shapes_3d_frame[var_item])
-
-        for var_item in add_millimeters_squared:
-            shapes_3d_frame[var_item] = add_mm2(shapes_3d_frame[var_item])
-
-        for var_item in add_millimeters_cubed:
-            shapes_3d_frame[var_item] = add_mm3(shapes_3d_frame[var_item])
 
         shapes_3d_string = tabulate(shapes_3d_frame, headers='keys', tablefmt='psql', showindex=False)
 
@@ -824,7 +821,7 @@ if len(shapes_2d) <= 0:
 
 # set 2d result to the tabulated string
 else:
-    result_2d = shapes_2d_frame
+    result_2d = shapes_2d_string
 
 # print the 2d result
 print(result_2d, "\n\n")
