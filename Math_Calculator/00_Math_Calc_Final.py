@@ -297,7 +297,7 @@ if shape_yn_2d == "yes":
             if shape == "rectangle":
                 # ask for dimensions and values
                 dimension_1 = find_dimension("What is the length of the rectangle? ")
-                dimension_2 = find_dimension("What is the height of the rectangle? ")
+                dimension_2 = find_dimension("What is the width of the rectangle? ")
                 print()
 
                 # Convert length values to mm
@@ -322,6 +322,8 @@ if shape_yn_2d == "yes":
 
                     # covert to millimeters
                     dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+
+                    print(dimension_1)
 
                     # calculate the sa & perimeter
                     area = pi * (dimension_1 / 2) ** 2
@@ -406,8 +408,15 @@ if shape_yn_2d == "yes":
                     dimension_3 = convert_mm(dimension_3[0], dimension_3[1])
 
                     # calculate area
-                    s = (dimension_1 + dimension_2 + dimension_3) / 2
-                    area = (s * (s - dimension_1) * (s - dimension_2) * (s - dimension_3)) ** 0.5
+                    try:
+                        s = (dimension_1 + dimension_2 + dimension_3) / 2
+                        area = (s * (s - dimension_1) * (s - dimension_2) * (s - dimension_3)) ** 0.5
+                        area = float(area)
+
+                    # if user enter values that cannot be a triangle
+                    except TypeError:
+                        print("This is not a real triangle\n")
+                        continue
 
                     # calculate perimeter
                     perimeter = dimension_1 + dimension_2 + dimension_3
@@ -424,8 +433,8 @@ if shape_yn_2d == "yes":
                     dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
 
                     # calculate area
-                    s = (dimension_1 + dimension_2 * 2) / 2
-                    area = (s * (s - dimension_1) * ((s - dimension_2) * 2)) ** 0.5
+                    height = (dimension_2 ** 2 - (dimension_1 / 2) ** 2) ** 0.5
+                    area = (height * dimension_1) / 2
 
                     # calculate perimeter
                     perimeter = dimension_1 + dimension_2 * 2
@@ -439,7 +448,7 @@ if shape_yn_2d == "yes":
             perimeter = round_2dp(perimeter)
 
             # print area and perimeter
-            print(f"the area of your {shape} is {area}mm")
+            print(f"the area of your {shape} is {area}mm\u00b2")
             print(f"the perimeter of your {shape} is {perimeter}mm")
             print()
 
@@ -498,7 +507,7 @@ if shape_yn_3d == "yes":
         while True:
             # ask what shape they would like to find the surface area and volume for
             shape = string_check("Which 3d shape would you like to calculate surface area and volume for? ",
-                               ["cuboid", "cylinder", "cone", "sphere", "pyramid", "xxx"], 3)
+                               ["cuboid", "cylinder", "cone", "sphere", "pyramid", "xxx"], 2)
             print()
 
             # if user enters 'xxx' break while loop
@@ -521,8 +530,8 @@ if shape_yn_3d == "yes":
             if shape == "cuboid":
                 # ask for dimensions and values
                 dimension_1 = find_dimension("What is the length of the cuboid? ")
-                dimension_2 = find_dimension("What is the height of the cuboid? ")
-                dimension_3 = find_dimension("What is the width of the cuboid? ")
+                dimension_2 = find_dimension("What is the width of the cuboid? ")
+                dimension_3 = find_dimension("What is the height of the cuboid? ")
                 print()
 
                 # Convert length values to mm
@@ -753,9 +762,18 @@ if shape_yn_3d == "yes":
                     # calculate volume
                     volume = 1/3 * b_area * dimension_2
 
+            # round all values to 2 dp
+            dimension_1 = round_2dp(dimension_1)
+            dimension_2 = round_2dp(dimension_2)
+            dimension_3 = round_2dp(dimension_3)
+
+            sa = round_2dp(sa)
+            volume = round_2dp(volume)
+
             # print sa and volume
-            print(f"the surface area of your {shape} is {sa}")
-            print(f"the volume of your {shape} is {volume}")
+            print(f"the surface area of your {shape} is {sa}\u00b2")
+            print(f"the volume of your {shape} is {volume}\u00b3")
+            print()
 
             # append dimensions to a list
             dimension_3d1.append(dimension_1)
