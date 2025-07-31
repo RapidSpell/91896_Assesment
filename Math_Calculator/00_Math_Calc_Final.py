@@ -200,7 +200,7 @@ def round_2dp(value):
 
 
 def add_mm_pwr(old_list, power):
-    """ this function adds 'mm^3' to the end of every value/string in a list"""
+    """ this function adds 'mm' or 'mm^2' to the end of every value/string in a list"""
     new_list = []
 
     for value in old_list:
@@ -208,11 +208,8 @@ def add_mm_pwr(old_list, power):
             if power == 1:
                 new_list.append(f"{value}mm")
 
-            elif power == 2:
-                new_list.append(f"{value}mm\u00b2")
-
             else:
-                new_list.append(f"{value}mm\u00b3")
+                new_list.append(f"{value}mm\u00b2")
 
         else:
             new_list.append(value)
@@ -225,32 +222,22 @@ def add_mm_pwr(old_list, power):
 # initialize variables
 # 2d variables
 # variable lists
-shapes_2d = []
+shapes = []
 dimension_2d1 = []
 dimension_2d2 = []
 dimension_2d3 = []
 areas = []
 perimeters = []
 
-# 3d variables
-# variable lists
-shapes_3d = []
-dimension_3d1 = []
-dimension_3d2 = []
-dimension_3d3 = []
-surface_areas = []
-volumes = []
-
-# setting values to "" so they cannot be undefined
-shapes_3d_string = ""
-shapes_2d_string = ""
-shapes_2d_frame = ""
-
 # other variables
 pi = math.pi
 
+# setting values to "" so they cannot be undefined
+shapes_string = ""
+shapes_frame = ""
+
 # print the title/welcome message
-header_txt = "welcome to geometry calculator"
+header_txt = "welcome to 2d shapes calculator"
 print(statement(header_txt, "*"), "\n")
 # ask if the user wants to see the instructions
 instructions_yn = yes_no("Would you like to read the instructions? ")
@@ -259,562 +246,230 @@ instructions_yn = yes_no("Would you like to read the instructions? ")
 if instructions_yn == "yes":
     print("""
     *instructions go here*
-    
-    and something about only equilateral triangles for the base of the triangular based pyramid
     """)
 
 else:
     print()
 
-# ask the user if the want to find the information for any 2d shapes
-shape_yn_2d = yes_no("do you have any 2D shapes you would like calculate area and perimeter for? ")
-print()
-# if user picks yes run 2d code
-if shape_yn_2d == "yes":
-    # 2d code goes here
-    # while loop to go back to the start if the user accidentally enters 'xxx'
+# while loop to go back to the start if the user accidentally enters 'xxx'
+while True:
+    # while loop to keep asking for 2d shapes until user enters 'xxx'
     while True:
-        # while loop to keep asking for 2d shapes until user enters 'xxx'
-        while True:
-            # ask what shape they would like to find the area and perimeter for
-            shape = string_check("Which 2d shape would you like to calculate area and perimeter for? ",
-                               ["rectangle", "circle", "triangles", "xxx"])
+        # ask what shape they would like to find the area and perimeter for
+        shape = string_check("Which shape would you like to calculate area and perimeter for? ",
+                           ["rectangle", "circle", "triangles", "xxx"])
+        print()
+
+        # set dimensions to "NA"
+        dimension_1 = "NA"
+        dimension_2 = "NA"
+        dimension_3 = "NA"
+
+        # if user enters 'xxx' break while loop
+        if shape == "xxx":
+            break
+
+        # append chosen shape to a list
+        shapes.append(shape)
+
+        # if user choose square
+        if shape == "rectangle":
+            # ask for dimensions and values
+            dimension_1 = find_dimension("What is the length of the rectangle? ")
+            dimension_2 = find_dimension("What is the width of the rectangle? ")
             print()
 
-            # set dimensions to "NA"
-            dimension_1 = "NA"
-            dimension_2 = "NA"
-            dimension_3 = "NA"
+            # Convert length values to mm
+            dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+            dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
 
-            # if user enters 'xxx' break while loop
-            if shape == "xxx":
-                break
+            # calculate area and perimeter
+            area = dimension_1 * dimension_2
+            perimeter = 2 * dimension_1 + 2 * dimension_2
 
-            # append chosen shape to a list
-            shapes_2d.append(shape)
+        # if user chose circle
+        elif shape == "circle":
+            known_dimensions_list = ["diameter", "radius", "circumference"]
+            known_len = string_check("what is the known dimension? ", known_dimensions_list)
+            print()
 
-            # if user choose square
-            if shape == "rectangle":
+            # if known dimension is diameter
+            if known_len == "diameter":
                 # ask for dimensions and values
-                dimension_1 = find_dimension("What is the length of the rectangle? ")
-                dimension_2 = find_dimension("What is the width of the rectangle? ")
+                dimension_1 = find_dimension("what is the diameter or the circle? ")
                 print()
 
-                # Convert length values to mm
+                # covert to millimeters
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+
+                # calculate the sa & perimeter
+                area = pi * (dimension_1 / 2) ** 2
+                perimeter = 2 * pi * (dimension_1 / 2)
+
+            # if known dimension is radius
+            elif known_len == "radius":
+                # ask for dimensions and values
+                dimension_1 = find_dimension("what is the radius or the circle? ")
+                print()
+
+                # covert to millimeters
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+
+                # calculate the sa & perimeter
+                area = pi * dimension_1 ** 2
+                perimeter = 2 * pi * dimension_1
+
+            # if known dimension is circumference
+            else:
+                # ask for dimensions and values
+                dimension_1 = find_dimension("what is the circumference or the circle? ")
+                print()
+
+                # covert to millimeters
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+
+                # calculate the area and perimeter
+                area = pi * (dimension_1 / (2 * pi)) ** 2
+                perimeter = dimension_1
+
+        # if user chose triangle
+        else:
+            # list of valid types of triangles
+            tri_types = ["right angle", "equilateral", "scalene", "isosceles"]
+
+            # ask user what type of triangle they are calculating area and perimeter for
+            tri_type = string_check("What type of triangle are you calculating area and perimeter for? ", tri_types)
+            print()
+
+            # if user picks right angle
+            if tri_type == "right angle":
+                # gets base length and height
+                dimension_1 = find_dimension("what is the length of the base of the triangle? ")
+                dimension_2 = find_dimension("What is the height of the triangle? ")
+                print()
+
+                # convert values to mm
                 dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
                 dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
 
                 # calculate area and perimeter
-                area = dimension_1 * dimension_2
-                perimeter = 2 * dimension_1 + 2 * dimension_2
+                area = 0.5 * dimension_1 * dimension_2
+                perimeter = dimension_1 + dimension_2 + (dimension_1 ** 2 + dimension_2 ** 2) ** 0.5
 
-            # if user chose circle
-            elif shape == "circle":
-                known_dimensions_list = ["diameter", "radius", "circumference"]
-                known_len = string_check("what is the known dimension? ", known_dimensions_list)
+            # if user picks equilateral
+            elif tri_type == "equilateral":
+                # gets sides length
+                dimension_1 = find_dimension("What is the length of the sides of the triangle? ")
                 print()
 
-                # if known dimension is diameter
-                if known_len == "diameter":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the diameter or the circle? ")
-                    print()
+                # convert values to mm
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
 
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                # calculate area
+                area = ((3 ** (1/2)) / 4) * (dimension_1 ** 2)
 
-                    print(dimension_1)
+                # calculate perimeter
+                perimeter = dimension_1 * 3
 
-                    # calculate the sa & perimeter
-                    area = pi * (dimension_1 / 2) ** 2
-                    perimeter = 2 * pi * (dimension_1 / 2)
-
-                # if known dimension is radius
-                elif known_len == "radius":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the radius or the circle? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the sa & perimeter
-                    area = pi * dimension_1 ** 2
-                    perimeter = 2 * pi * dimension_1
-
-                # if known dimension is circumference
-                else:
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the circumference or the circle? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = pi * (dimension_1 / (2 * pi)) ** 2
-                    perimeter = dimension_1
-
-            # if user chose triangle
-            else:
-                # list of valid types of triangles
-                tri_types = ["right angle", "equilateral", "scalene", "isosceles"]
-
-                # ask user what type of triangle they are calculating area and perimeter for
-                tri_type = string_check("What type of triangle are you calculating area and perimeter for? ", tri_types)
+            # if user picks scalene
+            elif tri_type == "scalene":
+                # gets sides length
+                dimension_1 = find_dimension("What is the length of the first side of the triangle? ")
+                dimension_2 = find_dimension("What is the length of the second side of the triangle? ")
+                dimension_3 = find_dimension("What is the length of the third side of the triangle? ")
                 print()
 
-                # if user picks right angle
-                if tri_type == "right angle":
-                    # gets base length and height
-                    dimension_1 = find_dimension("what is the length of the base of the triangle? ")
-                    dimension_2 = find_dimension("What is the height of the triangle? ")
-                    print()
-
-                    # convert values to mm
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
-
-                    # calculate area and perimeter
-                    area = 0.5 * dimension_1 * dimension_2
-                    perimeter = dimension_1 + dimension_2 + (dimension_1 ** 2 + dimension_2 ** 2) ** 0.5
-
-                # if user picks equilateral
-                elif tri_type == "equilateral":
-                    # gets sides length
-                    dimension_1 = find_dimension("What is the length of the sides of the triangle? ")
-                    print()
-
-                    # convert values to mm
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate area
-                    area = ((3 ** (1/2)) / 4) * (dimension_1 ** 2)
-
-                    # calculate perimeter
-                    perimeter = dimension_1 * 3
-
-                # if user picks scalene
-                elif tri_type == "scalene":
-                    # gets sides length
-                    dimension_1 = find_dimension("What is the length of the first side of the triangle? ")
-                    dimension_2 = find_dimension("What is the length of the second side of the triangle? ")
-                    dimension_3 = find_dimension("What is the length of the third side of the triangle? ")
-                    print()
-
-                    # convert values to mm
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
-                    dimension_3 = convert_mm(dimension_3[0], dimension_3[1])
-
-                    # calculate area
-                    try:
-                        s = (dimension_1 + dimension_2 + dimension_3) / 2
-                        area = (s * (s - dimension_1) * (s - dimension_2) * (s - dimension_3)) ** 0.5
-                        area = float(area)
-
-                    # if user enter values that cannot be a triangle
-                    except TypeError:
-                        print("This is not a real triangle\n")
-                        continue
-
-                    # calculate perimeter
-                    perimeter = dimension_1 + dimension_2 + dimension_3
-
-                # if user picks isosceles
-                else:
-                    # gets sides length
-                    dimension_1 = find_dimension("What is the length of the side of different length? ")
-                    dimension_2 = find_dimension("What is the length of the sides of the same length? ")
-                    print()
-
-                    # convert values to mm
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
-
-                    # calculate area
-                    height = (dimension_2 ** 2 - (dimension_1 / 2) ** 2) ** 0.5
-                    area = (height * dimension_1) / 2
-
-                    # calculate perimeter
-                    perimeter = dimension_1 + dimension_2 * 2
-
-            # round all values to 2 dp
-            dimension_1 = round_2dp(dimension_1)
-            dimension_2 = round_2dp(dimension_2)
-            dimension_3 = round_2dp(dimension_3)
-
-            area = round_2dp(area)
-            perimeter = round_2dp(perimeter)
-
-            # print area and perimeter
-            print(f"the area of your {shape} is {area}mm\u00b2")
-            print(f"the perimeter of your {shape} is {perimeter}mm")
-            print()
-
-            # append dimensions to a list
-            dimension_2d1.append(dimension_1)
-            dimension_2d2.append(dimension_2)
-            dimension_2d3.append(dimension_3)
-
-            # append area and perimeter to a list
-            areas.append(area)
-            perimeters.append(perimeter)
-
-        # if no 2d shape where entered ask user if they are sure they want no 2d shapes
-        finished_2d = yes_no("Are you sure you have no more 2d shapes? ")
-        print()
-
-        # if user says yes break the while loop
-        if finished_2d == "yes":
-            break
-
-    # if there is 1 or more 2d shapes crate dictionary and frame
-    if len(shapes_2d) >= 1:
-
-        # add mm and mm^2
-        dimension_2d1 = add_mm_pwr(dimension_2d1, 1)
-        dimension_2d2 = add_mm_pwr(dimension_2d2, 1)
-        dimension_2d3 = add_mm_pwr(dimension_2d3, 1)
-        perimeters = add_mm_pwr(perimeters, 1)
-        areas = add_mm_pwr(areas, 2)
-
-        # creates dictionary
-        shapes_2d_dict = {
-            'Shape': shapes_2d,
-            'Dimension 1': dimension_2d1,
-            'Dimension 2': dimension_2d2,
-            'Dimension 3': dimension_2d3,
-            'Area': areas,
-            'Perimeter': perimeters
-        }
-
-        # create frame
-        shapes_2d_frame = pandas.DataFrame(shapes_2d_dict)
-
-        shapes_2d_string = tabulate(shapes_2d_frame, headers='keys', tablefmt='psql', showindex=False)
-
-# ask the user if the want to find the information for any 3d shapes
-shape_yn_3d = yes_no("Do you have any 3d shapes you would like to calculate surface area and volume for? ")
-print()
-
-# if user picks yes run 3d code
-if shape_yn_3d == "yes":
-    # 3d code goes here
-    # while loop to go back to the start if the user accidentally enters 'xxx'
-    while True:
-        # while loop to keep asking for 3d shapes until user enters 'xxx'
-        while True:
-            # ask what shape they would like to find the surface area and volume for
-            shape = string_check("Which 3d shape would you like to calculate surface area and volume for? ",
-                               ["cuboid", "cylinder", "cone", "sphere", "pyramid", "xxx"], 2)
-            print()
-
-            # if user enters 'xxx' break while loop
-            if shape == "xxx":
-                break
-
-            # append chosen shape to a list
-            shapes_3d.append(shape)
-
-            # set dimensions to "NA" as a default
-            dimension_1 = "NA"
-            dimension_2 = "NA"
-            dimension_3 = "NA"
-            volume = ""
-            sa = ""
-
-
-
-            # if user choose cuboid
-            if shape == "cuboid":
-                # ask for dimensions and values
-                dimension_1 = find_dimension("What is the length of the cuboid? ")
-                dimension_2 = find_dimension("What is the width of the cuboid? ")
-                dimension_3 = find_dimension("What is the height of the cuboid? ")
-                print()
-
-                # Convert length values to mm
+                # convert values to mm
                 dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
                 dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
                 dimension_3 = convert_mm(dimension_3[0], dimension_3[1])
 
-                # calculate area and perimeter
-                sa = (dimension_1 * dimension_2 * 2) + (dimension_3 * dimension_2 * 2) + (dimension_3 * dimension_2 * 2)
-                volume = dimension_1 * dimension_2 * dimension_3
+                # calculate area
+                try:
+                    s = (dimension_1 + dimension_2 + dimension_3) / 2
+                    area = (s * (s - dimension_1) * (s - dimension_2) * (s - dimension_3)) ** 0.5
+                    area = float(area)
 
-            # if user picks cylinder
-            elif shape == "cylinder":
-                known_dimensions_list = ["diameter", "radius", "circumference"]
-                known_len = string_check("what is the known dimension of the base? ", known_dimensions_list)
-                print()
+                # if user enter values that cannot be a triangle
+                except TypeError:
+                    print("This is not a real triangle\n")
+                    continue
 
-                # if known dimension is diameter
-                if known_len == "diameter":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the diameter of the base? ")
-                    print()
+                # calculate perimeter
+                perimeter = dimension_1 + dimension_2 + dimension_3
 
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = pi * (dimension_1 / 2) ** 2
-                    perimeter = 2 * pi * (dimension_1 / 2)
-
-                # if known dimension is radius
-                elif known_len == "radius":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the radius of the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = pi * dimension_1 ** 2
-                    perimeter = 2 * pi * dimension_1
-
-                # if known dimension is circumference
-                else:
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the circumference or the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = 2 * pi * (dimension_1 / (2 * pi))
-                    perimeter = dimension_1
-
-                # asks user for height
-                height = find_dimension("what is the height of the cylinder? ")
-                print()
-
-                # convert height to mm
-                height = convert_mm(height[0], height[1])
-
-                # calculate sa & volume
-                sa = area * 2 + perimeter * height
-                volume = area * height
-
-            # if user picks cone
-            elif shape == "cone":
-                known_dimensions_list = ["diameter", "radius", "circumference"]
-                known_len = string_check("what is the known dimension of the base? ", known_dimensions_list)
-                print()
-
-                # if known dimension is diameter
-                if known_len == "diameter":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the diameter of the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = pi * (dimension_1 / 2) ** 2
-                    perimeter = 2 * pi * (dimension_1 / 2)
-
-                # if known dimension is radius
-                elif known_len == "radius":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the radius of the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = pi * dimension_1 ** 2
-                    perimeter = 2 * pi * dimension_1
-
-                # if known dimension is circumference
-                else:
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the circumference or the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    # calculate the area and perimeter
-                    area = 2 * pi * (dimension_1 / (2 * pi))
-                    perimeter = dimension_1
-
-                # asks user for height
-                height = find_dimension("what is the height of the cone? ")
-                print()
-
-                # convert height to mm
-                height = convert_mm(height[0], height[1])
-
-                # find radius of cone
-                r = perimeter / (2 * pi)
-
-                # find slant height of cone
-                s = ((r ** 2) + height ** 2) ** (1 / 2)
-
-                # calculate sa & volume
-                sa = pi * (r ** 2) + pi * r * s
-                volume = (1/3) * height * (r ** 2)
-
-            # if user picks sphere
-            elif shape == "sphere":
-                known_dimensions_list = ["diameter", "radius", "circumference"]
-                known_len = string_check("what is the known dimension of the base? ", known_dimensions_list)
-                print()
-
-                # if known dimension is diameter
-                if known_len == "diameter":
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the diameter of the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-
-                    radius = 0.5 * dimension_1
-
-                # if known dimension is radius
-                elif known_len == "radius":
-                    # ask for dimensions and values
-                    radius = find_dimension("what is the radius of the base? ")
-                    print()
-
-                    # covert to millimeters
-                    radius = convert_mm(radius[0], radius[1])
-                    dimension_1 = radius
-
-                # if known dimension is circumference
-                else:
-                    # ask for dimensions and values
-                    dimension_1 = find_dimension("what is the circumference or the base? ")
-                    print()
-
-                    # covert to millimeters
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-                    radius = dimension_1 / (2 * pi)
-
-                # calculate sa & volume
-                sa = 4 * pi * radius ** 2
-                volume = (4 / 3) * pi * radius ** 3
-
-            # if user picks pyramid
+            # if user picks isosceles
             else:
-                # finds what shape the base of the pyramid is
-                base = string_check("what shape is the base of the pyramid? ",
-                                  ["square", "triangle"])
+                # gets sides length
+                dimension_1 = find_dimension("What is the length of the side of different length? ")
+                dimension_2 = find_dimension("What is the length of the sides of the same length? ")
                 print()
 
-                # if user picks square
-                if base == "square":
-                    dimension_1 = find_dimension("What is the height of the pyramid? ")
-                    dimension_2 = find_dimension("What is the width of the base? ")
-                    print()
+                # convert values to mm
+                dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
+                dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
 
-                    # convert dimensions to mm
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
+                # calculate area
+                height = (dimension_2 ** 2 - (dimension_1 / 2) ** 2) ** 0.5
+                area = (height * dimension_1) / 2
 
-                    # calculate area of the base
-                    base_sa = dimension_2 * dimension_2
+                # calculate perimeter
+                perimeter = dimension_1 + dimension_2 * 2
 
-                    # find the slant height for the pyramid
-                    s_height = ((0.5 * dimension_2) ** 2 + dimension_1 ** 2) ** 0.5
+        # round all values to 2 dp
+        dimension_1 = round_2dp(dimension_1)
+        dimension_2 = round_2dp(dimension_2)
+        dimension_3 = round_2dp(dimension_3)
 
-                    # calculate area of sides
-                    s_area = s_height * 0.5 * dimension_2
+        area = round_2dp(area)
+        perimeter = round_2dp(perimeter)
 
-                    # calculate total sa and volume
-                    sa = base_sa + s_area * 4
-                    volume = (dimension_2 ** 2) * (dimension_1 / 3)
-
-                # if user picks triangle
-                else:
-                    # gets base length and height
-                    dimension_1 = find_dimension("what is the length of the base of the base triangle? ")
-                    dimension_2 = find_dimension("What is the height of the base triangle? ")
-                    print()
-
-                    # convert values to mm
-                    dimension_1 = convert_mm(dimension_1[0], dimension_1[1])
-                    dimension_2 = convert_mm(dimension_2[0], dimension_2[1])
-
-                    # calculate area
-                    s = (dimension_1 * 3) / 2
-                    b_area = (s * 3 * (s - dimension_1)) ** 0.5
-
-                    # calculate minimum distance between the edge of the base triangle to the centre
-                    distance_to_centre = ((dimension_1 * (3 ** 0.5)) / 2) / 3
-
-                    # calculate slant height
-                    s_height = ((distance_to_centre ** 2) + (dimension_2 ** 2)) ** 1/2
-
-                    # calculate the area of the side faces
-                    s_area = (s_height * dimension_1) / 2
-
-                    # calculate surface area
-                    sa = b_area + (s_area * 3)
-
-                    # calculate volume
-                    volume = 1/3 * b_area * dimension_2
-
-            # round all values to 2 dp
-            dimension_1 = round_2dp(dimension_1)
-            dimension_2 = round_2dp(dimension_2)
-            dimension_3 = round_2dp(dimension_3)
-
-            sa = round_2dp(sa)
-            volume = round_2dp(volume)
-
-            # print sa and volume
-            print(f"the surface area of your {shape} is {sa}\u00b2")
-            print(f"the volume of your {shape} is {volume}\u00b3")
-            print()
-
-            # append dimensions to a list
-            dimension_3d1.append(dimension_1)
-            dimension_3d2.append(dimension_2)
-            dimension_3d3.append(dimension_3)
-
-            # append area and perimeter to lists
-            surface_areas.append(sa)
-            volumes.append(volume)
-
-        # if no 3d shape where entered ask user if they are sure they want no 3d shapes
-        finished_yn = yes_no("Are you sure you have no more 3d shapes")
+        # print area and perimeter
+        print(f"the area of your {shape} is {area}mm\u00b2")
+        print(f"the perimeter of your {shape} is {perimeter}mm")
         print()
 
-        # if user says yes break the while loop
-        if finished_yn == "yes":
-            break
+        # append dimensions to a list
+        dimension_2d1.append(dimension_1)
+        dimension_2d2.append(dimension_2)
+        dimension_2d3.append(dimension_3)
 
-    # if there is 1 or more 3d shapes crate dictionary and frame
-    if len(shapes_3d) >= 1:
-        #  add mm and mm^2
-        dimension_2d1 = add_mm_pwr(dimension_2d1, 1)
-        dimension_2d2 = add_mm_pwr(dimension_2d2, 1)
-        dimension_2d3 = add_mm_pwr(dimension_2d3, 1)
-        volumes = add_mm_pwr(volumes, 3)
-        surface_areas = add_mm_pwr(surface_areas, 2)
+        # append area and perimeter to a list
+        areas.append(area)
+        perimeters.append(perimeter)
 
-        # creates dictionary
-        shapes_3d_dict = {
-            'Shape': shapes_3d,
-            'Dimension 1': dimension_3d1,
-            'Dimension 2': dimension_3d2,
-            'Dimension 3': dimension_3d3,
-            'Surface Area': areas,
-            'Volume': perimeters
-        }
+    # if no 2d shape where entered ask user if they are sure they want no 2d shapes
+    finished_2d = yes_no("Are you sure you have no more 2d shapes? ")
+    print()
 
-        # create frame
-        shapes_3d_frame = pandas.DataFrame(shapes_3d_dict)
+    # if user says yes break the while loop
+    if finished_2d == "yes":
+        break
 
-        shapes_3d_string = tabulate(shapes_3d_frame, headers='keys', tablefmt='psql', showindex=False)
+# if there is 1 or more 2d shapes crate dictionary and frame
+if len(shapes) >= 1:
+
+    # add mm and mm^2
+    dimension_2d1 = add_mm_pwr(dimension_2d1, 1)
+    dimension_2d2 = add_mm_pwr(dimension_2d2, 1)
+    dimension_2d3 = add_mm_pwr(dimension_2d3, 1)
+    perimeters = add_mm_pwr(perimeters, 1)
+    areas = add_mm_pwr(areas, 2)
+
+    # creates dictionary
+    shapes_dict = {
+        'Shape': shapes,
+        'Dimension 1': dimension_2d1,
+        'Dimension 2': dimension_2d2,
+        'Dimension 3': dimension_2d3,
+        'Area': areas,
+        'Perimeter': perimeters
+    }
+
+    # create frame
+    shapes_frame = pandas.DataFrame(shapes_dict)
+
+    shapes_string = tabulate(shapes_frame, headers='keys', tablefmt='psql', showindex=False)
 
 # get current date for heading and file name
 today = date.today()
@@ -834,32 +489,15 @@ header_2d = statement("2d shapes", "-")
 print(header_2d, "\n")
 
 # set 2d results to "no 2d shapes were calculated"
-if len(shapes_2d) <= 0:
+if len(shapes) <= 0:
     result_2d = "no 2d shapes were calculated"
 
 # set 2d result to the tabulated string
 else:
-    result_2d = shapes_2d_string
+    result_2d = shapes_string
 
 # print the 2d result
 print(result_2d, "\n\n")
-
-# make 3d shapes header
-header_3d = statement("3d shapes", "-")
-
-# print 3d shapes header
-print(header_3d, "\n")
-
-# set 2d results to "no 3d shapes were calculated"
-if len(shapes_3d) <=0:
-    result_3d = "no 3d shapes were calculated"
-
-# set 3d result to the tabulated string
-else:
-    result_3d = shapes_3d_string
-
-# print the 3d result
-print(result_3d, "\n\n")
 
 # create file
 file_name = "Math_Calc_Final_Output"
@@ -867,7 +505,7 @@ write_to = "{}.txt".format(file_name)
 text_file = open(write_to, "w+")
 
 # what to write to file list
-to_write = [f"{header}\n", header_2d, f"{result_2d}\n\n", header_3d, f"{result_3d}\n\n", "thank you for using the geometry calculator"]
+to_write = [f"{header}\n", header_2d, f"{result_2d}\n\n", "thank you for using the geometry calculator"]
 
 # write everything in the list to file
 for item in to_write:
