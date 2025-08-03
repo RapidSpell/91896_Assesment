@@ -97,7 +97,7 @@ def pick_list(question, valid_ans_list):
     # while to keep asking until user enters a valid ans
     while True:
         # find user choice
-        choice = input(question)
+        choice = input(question).lower()
 
         # if user picks a valid ans
         if choice in valid_ans_list:
@@ -146,7 +146,7 @@ def find_dimension(question):
         # while true to keep asking the units until they enter a valid ans
         while True:
             # asks for units
-            units = pick_list("what units of measurements is this length", valid_units)
+            units = pick_list("what units of measurements is this length?", valid_units)
 
             # if they enter valid units
             if units in valid_units:
@@ -156,10 +156,10 @@ def find_dimension(question):
             else:
                 print(error)
 
-        if units == "mm" and dimension <= 9000:
+        if units == "mm" or "millimeters" and dimension <= 9000:
             break
 
-        elif units == "cm" and  dimension <= 900:
+        elif units == "cm" or "centimeters" and  dimension <= 900:
             break
 
         elif units == "m" and dimension <= 9:
@@ -173,10 +173,10 @@ def find_dimension(question):
 
 def convert_mm(value, current_unit):
     """this function converts values from cm, m and km to mm"""
-    if current_unit == "mm":
+    if current_unit == "mm" or "millimeters":
         value = value
 
-    elif current_unit == "cm":
+    elif current_unit == "cm" or "centimeters":
         value *= 10
 
     else:
@@ -245,7 +245,15 @@ instructions_yn = yes_no("Would you like to read the instructions? ")
 # if the user wants to se the instructions print them here
 if instructions_yn == "yes":
     print("""
-    *instructions go here*
+    *** Instructions ***
+    
+    This is 2d shapes calculator where you can find the area and perimeter of your 2d shapes
+    
+    You will need to select what shape you are calculating area nd perimeter for.
+    You can chose from these options rectangle, circle or triangle.
+    
+    You will then have to chose your known dimension if this option comes up.
+    Then you will have to enter your value for distance. then add your units.
     """)
 
 else:
@@ -257,7 +265,7 @@ while True:
     while True:
         # ask what shape they would like to find the area and perimeter for
         shape = string_check("Which shape would you like to calculate area and perimeter for? ",
-                           ["rectangle", "circle", "triangles", "xxx"])
+                           ["rectangle", "circle", "triangle", "xxx"])
         print()
 
         # set dimensions to "NA"
@@ -439,7 +447,12 @@ while True:
         perimeters.append(perimeter)
 
     # if no 2d shape where entered ask user if they are sure they want no 2d shapes
-    finished_2d = yes_no("Are you sure you have no more 2d shapes? ")
+    if len(shapes) <= 0:
+        finished_2d = yes_no("Are you sure you have no shapes? ")
+
+    else:
+        finished_2d = yes_no("Are you sure you have no more shapes? ")
+
     print()
 
     # if user says yes break the while loop
