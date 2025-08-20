@@ -10,64 +10,6 @@ def statement(txt, decor):
     return f"{decor * 3} {txt} {decor * 3}"
 
 
-def yes_no(question):
-    """this function makes users say yes or no to a question"""
-
-    error = "please answer with yes/no"
-    # loops code until user enters a valid answer
-    while True:
-        # ask user answer your yes no question
-        response = input(question).lower()
-
-        # lists of valid responses
-        yes_list = ['yes', 'y']
-        no_list = ['no', 'n']
-
-        # if they answer yes it returns yes
-        if response in yes_list:
-            return "yes"
-
-        # if they answer no it returns no
-        elif response in no_list:
-            return "no"
-
-        # if they did not enter yes or no it tells them to and then loops the code
-        else:
-            print(error)
-
-
-def pick_shape(question, shapes_list):
-    """ This function makes users pick a shape from a list"""
-
-    # error message for if they don't select a valid
-    error = f"please enter a valid shape {shapes_list}"
-
-    # while loop to keep asking what shape they want if they don't enter a valid ans
-    while True:
-        # asks user what shape they want
-        choice = input(question).lower()
-
-        if choice in shapes_list:
-            return choice
-
-        else:
-            if choice == "xxx":
-                return choice
-
-            print(error)
-
-
-def float_check(num):
-    """ this function checks if a variable is a float """
-    try:
-        float(num)
-
-        return "float"
-
-    except ValueError:
-        return "not float"
-
-
 def string_check(question, valid_ans_list, num_letters=1):
     """checks a user"""
     error = f"""
@@ -89,25 +31,6 @@ Please choose an option from {valid_ans_list}
         print(error)
 
 
-def pick_list(question, valid_ans_list):
-    """ this function makes users pick an option from a list """
-    # error message to display if the user inputs and invalid response
-    error = f"Please enter valid units {valid_ans_list}"
-
-    # while to keep asking until user enters a valid ans
-    while True:
-        # find user choice
-        choice = input(question).lower()
-
-        # if user picks a valid ans
-        if choice in valid_ans_list:
-            return choice
-
-        #if user enters an invalid ans
-        else:
-            print(error)
-
-
 def find_dimension(question):
     """ this function finds a dimension """
     # list of valid units
@@ -123,15 +46,8 @@ def find_dimension(question):
             # finds what the distance is
             dimension = input(question)
 
-            # tests if it is a float
-            dimension_float = float_check(dimension)
-
-            # if entered value is not a float
-            if dimension_float == "not float":
-                print(error)
-
             # if entered value it a float continue with the code
-            else:
+            try:
                 dimension = float(dimension)
 
                 if dimension <= 0:
@@ -140,13 +56,16 @@ def find_dimension(question):
                 else:
                     break
 
+            except ValueError:
+                print(error)
+
         # error message for if they enter an invalid ans
         error = f"Please enter a valid unit: {valid_units}"
 
         # while true to keep asking the units until they enter a valid ans
         while True:
             # asks for units
-            units = pick_list("what units of measurements is this length?", valid_units)
+            units = string_check("what units of measurements is this length?", valid_units,2)
 
             # if they enter valid units
             if units in valid_units:
@@ -156,15 +75,23 @@ def find_dimension(question):
             else:
                 print(error)
 
-        if units == "mm" or "millimeters" and dimension <= 9000:
+        #lists for mm, cm & m
+        mm = ["mm", "millimeters"]
+        cm = ["cm", "centimeters"]
+        m = ["m", "meters"]
+
+        # ensures the user is entering a value worth less than 9000 mm
+        # this is so that the program does not crash due the having too large numbers after doing the calculations for area and perimeter
+        if units in mm and dimension <= 9000:
             break
 
-        elif units == "cm" or "centimeters" and  dimension <= 900:
+        elif units in cm and dimension <= 900:
             break
 
-        elif units == "m" and dimension <= 9:
+        elif units in m and dimension <= 9:
             break
 
+        # tells the user there value is to large and they need tho calculate
         else:
             print("please enter a value less than 9000mm (900cm, 9m)")
 
@@ -173,10 +100,10 @@ def find_dimension(question):
 
 def convert_mm(value, current_unit):
     """this function converts values from cm, m and km to mm"""
-    if current_unit == "mm" or "millimeters":
+    if current_unit == "mm" or current_unit == "millimeters":
         value = value
 
-    elif current_unit == "cm" or "centimeters":
+    elif current_unit == "cm" or current_unit == "centimeters":
         value *= 10
 
     else:
@@ -219,9 +146,7 @@ def add_mm_pwr(old_list, power):
 
 
 # main routine goes here
-# initialize variables
-# 2d variables
-# variable lists
+# initialize variable lists
 shapes = []
 dimension_2d1 = []
 dimension_2d2 = []
@@ -229,7 +154,7 @@ dimension_2d3 = []
 areas = []
 perimeters = []
 
-# other variables
+# set other variables
 pi = math.pi
 
 # setting values to "" so they cannot be undefined
@@ -240,7 +165,7 @@ shapes_frame = ""
 header_txt = "welcome to 2d shapes calculator"
 print(statement(header_txt, "*"), "\n")
 # ask if the user wants to see the instructions
-instructions_yn = yes_no("Would you like to read the instructions? ")
+instructions_yn = string_check("Would you like to see the instructions?", ["yes", "no"])
 
 # if the user wants to se the instructions print them here
 if instructions_yn == "yes":
@@ -249,11 +174,17 @@ if instructions_yn == "yes":
     
     This is 2d shapes calculator where you can find the area and perimeter of your 2d shapes
     
-    You will need to select what shape you are calculating area nd perimeter for.
+    You will need to select what shape you are calculating area and perimeter for.
     You can chose from these options rectangle, circle or triangle.
-    
     You will then have to chose your known dimension if this option comes up.
-    Then you will have to enter your value for distance. then add your units.
+    Then you will have to enter your value for distance. Then add your units.
+    After you have done this for all dimensions the code will tell you the area and perimeter of the shape.
+    
+    You can continue doing this until you have calculated area and perimeter for all the shape you want to.
+    When you have finished enter "xxx" into the pick shape question.
+    Enter yes to the are you sure question.
+    
+    you will get a results over view and you will be able to look it the file to find your over view.
     """)
 
 else:
@@ -265,7 +196,7 @@ while True:
     while True:
         # ask what shape they would like to find the area and perimeter for
         shape = string_check("Which shape would you like to calculate area and perimeter for? ",
-                           ["rectangle", "circle", "triangle", "xxx"])
+                           ["square", "rectangle", "circle", "triangle", "xxx"])
         print()
 
         # set dimensions to "NA"
@@ -281,10 +212,16 @@ while True:
         shapes.append(shape)
 
         # if user choose square
-        if shape == "rectangle":
-            # ask for dimensions and values
-            dimension_1 = find_dimension("What is the length of the rectangle? ")
-            dimension_2 = find_dimension("What is the width of the rectangle? ")
+        if shape == "rectangle" or shape == "square":
+            if shape == "square":
+                dimension_1 = find_dimension("What is the length of the square? ")
+                dimension_2 = dimension_1
+
+            else:
+                # ask for dimensions and values
+                dimension_1 = find_dimension("What is the length of the rectangle? ")
+                dimension_2 = find_dimension("What is the width of the rectangle? ")
+
             print()
 
             # Convert length values to mm
@@ -448,10 +385,10 @@ while True:
 
     # if no 2d shape where entered ask user if they are sure they want no 2d shapes
     if len(shapes) <= 0:
-        finished_2d = yes_no("Are you sure you have no shapes? ")
+        finished_2d = string_check("Are you sure you have no shapes?", ["yes", "no"])
 
     else:
-        finished_2d = yes_no("Are you sure you have no more shapes? ")
+        finished_2d = string_check("Are you sure you have no more shapes?", ["yes", "no"])
 
     print()
 
@@ -518,7 +455,7 @@ write_to = "{}.txt".format(file_name)
 text_file = open(write_to, "w+")
 
 # what to write to file list
-to_write = [f"{header}\n", header_2d, f"{result_2d}\n\n", "thank you for using the geometry calculator"]
+to_write = [f"{header}\n", header_2d, f"{result_2d}\n\n", "Thank you for using the 2d shapes calculator"]
 
 # write everything in the list to file
 for item in to_write:
